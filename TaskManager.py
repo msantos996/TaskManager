@@ -33,6 +33,13 @@ class GestordeTarefas:
             tarefa.titulo = new_titulo if new_titulo else tarefa.title
             tarefa.descricao = new_descricao if new_descricao else tarefa.descricao
             tarefa.categoria = new_categoria if new_categoria else tarefa.categoria
+            if (new_prazo):
+                try:
+                    tarefa.prazo = int(new_prazo)
+                except ValueError:
+                    print("Prazo inválido! O prazo deve ser um valor numérico.")
+                    return
+
             tarefa.prazo = new_prazo if new_prazo else tarefa.prazo
             print(f"Tarefa '{tarefa.titulo}' editada com sucesso!")
         else:
