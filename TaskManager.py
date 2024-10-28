@@ -14,6 +14,13 @@ class Tarefas:
     def __str__(self):
         return f"Tarefa: {self.titulo}, Descrição: {self.descricao}, Categoria: {self.categoria}, Prazo: {self.prazo}, Status: {status[self.status]}"
 
+class Categorias:
+    def __init__(self, titulo):
+        self.titulo = titulo
+
+    def __str__(self):
+        return f"Categoria: {self.titulo}"
+
 class GestordeTarefas:
     def __init__(self):
         self.tarefas = []
@@ -70,6 +77,35 @@ class GestordeTarefas:
                 print("Status inválido! Use 'p - pendente' ou 'c - concluido'.")
         else:
             print("Índice de tarefa inválido!")
+
+    def criar_categoria(self, titulo):
+
+        nova_categoria = Categorias(titulo)
+
+        if (titulo in [categoria.titulo for categoria in self.categorias]):
+            print("Categoria já existe!")
+            return
+
+
+        self.categorias.append(nova_categoria)
+        print(f"Categoria '{titulo}' criada com sucesso!")
+
+    def listar_categorias(self):
+        if not self.categorias:
+            print("Nenhuma categoria encontrada.")
+            return False
+        for i, categoria in enumerate(self.categorias):
+            print(f"{i}: {categoria}")
+        return True
+
+    #TODO: Se existir uma categoria com tarefas associadas, não deve ser possível eliminar a categoria
+    def eliminar_categoria(self, index):
+        if 0 <= index < len(self.categorias):
+            categoria = self.categorias.pop(index)
+            print(f"Categoria '{categoria.titulo}' eliminada com sucesso!")
+        else:
+            print("Índice de categoria inválido!")
+
 
 def menu():
     gestor = GestordeTarefas()
