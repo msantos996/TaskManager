@@ -24,6 +24,7 @@ class Categorias:
 class GestordeTarefas:
     def __init__(self):
         self.tarefas = []
+        self.categorias = []
 
     def criar_tarefa(self, titulo, descricao, categoria, prazo, status="p"): # Added status parameter with default value
         if titulo and descricao and categoria and prazo:
@@ -79,13 +80,11 @@ class GestordeTarefas:
             print("Índice de tarefa inválido!")
 
     def criar_categoria(self, titulo):
-
         nova_categoria = Categorias(titulo)
 
-        if (titulo in [categoria.titulo for categoria in self.categorias]):
+        if titulo in [categoria.titulo for categoria in self.categorias]:
             print("Categoria já existe!")
             return
-
 
         self.categorias.append(nova_categoria)
         print(f"Categoria '{titulo}' criada com sucesso!")
@@ -113,15 +112,31 @@ def menu():
     def criar():
         titulo = input("Título: ")
         descricao = input("Descrição: ")
-        categoria = input("Categoria: ")
-        #valor_numerico = input("Prazo: ") #restringir para valores numericos
+
+        if not gestor.listar_categorias():
+            print("Nenhuma categoria disponível. Crie uma categoria primeiro.")
+            return
+
         while True:
             try:
-                prazo=int(input("Prazo: "))
+                categoria_index = int(input("Selecione o índice da categoria: "))
+                if 0 <= categoria_index < len(gestor.categorias):
+                    categoria = gestor.categorias[categoria_index].titulo
+                    break
+                else:
+                    print("Índice de categoria inválido. Tente novamente.")
+            except ValueError:
+                print("Por favor, insira um valor numérico válido.")
+
+        while True:
+            try:
+                prazo = int(input("Prazo: "))
                 break
             except ValueError:
-                print ("Por favor preencha com um valor inteiro") #criação do prazo em minutos, e um aviso se for tentado o utilizador escrever valores que não sejam numericos
+                print("Por favor preencha com um valor inteiro.")
+
         gestor.criar_tarefa(titulo, descricao, categoria, prazo)
+
     def editar():
         if not gestor.listar_tarefas():
             return
@@ -157,6 +172,22 @@ def menu():
         novo_status = input("Novo status (p - pendente/c - concluido): ")
         gestor.mudar_status(index, novo_status)
 
+    def criar_categoria():
+        titulo = input("Título: ")
+        gestor.criar_categoria(titulo)
+
+    def listar_categorias():
+        gestor.listar_categorias()
+
+    def eliminar_categoria():
+        if not gestor.listar_categorias():
+            return
+        index = input("Índice da categoria a remover (ou 'm' para voltar ao menu): ")
+        if index.lower() == 'm':
+            return
+        index = int(index)
+        gestor.eliminar_categoria(index)
+
     def sair():
         print("A Sair do Programa...")
         exit()
@@ -167,25 +198,31 @@ def menu():
         "3": eliminar,
         "4": listar,
         "5": mudar_status,
-        "6": sair
+        "6": criar_categoria,
+        "7": listar_categorias,
+        "8": eliminar_categoria,
+        "9": sair
     }
 
     while True:
-        print("\n -- Trabalho Realizado por Fátima Esteves, João Nogueira e Miguel Santos --") #menu principal de acesso ao programa, onde o utilizador pode escolher as opções
+        print("\n -- Trabalho Realizado por Fátima Esteves, João Nogueira e Miguel Santos --")
         print("\n -- Menu Task Manager --")
         print("1 - Criar Tarefa")
         print("2 - Editar Tarefa")
         print("3 - Eliminar Tarefa")
         print("4 - Listar Tarefas")
         print("5 - Mudar Status da Tarefa")
-        print("6 - Sair")
+        print("6 - Criar Categoria")
+        print("7 - Listar Categorias")
+        print("8 - Eliminar Categoria")
+        print("9 - Sair")
 
         escolha = input("Escolha a tarefa: ")
         action = options.get(escolha)
         if action:
             action()
         else:
-            print("Escolha inválida! Tente novamente.") #se o utilizador não escolher a opção correta é dado uma mensagem para tentar novamente
-
+            print("Escolha inválida! Tente novamente.")
+            
 if __name__ == "__main__":
     menu()
