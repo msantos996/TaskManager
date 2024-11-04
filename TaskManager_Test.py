@@ -84,23 +84,32 @@ class TaskManagerTest(unittest.TestCase):  # Corrected class name
         self.gestor.mudar_status(0, "x")
         self.assertEqual(self.gestor.tarefas[0].status, "p")
 
-    def test_criar_categoria_invalido(self):
-        self.gestor.criar_categoria("Ramos")
+    def test_criar_categoria(self):
         self.gestor.criar_categoria("Ramos")
         self.assertEqual(len(self.gestor.categorias), 1)
         self.assertEqual(self.gestor.categorias[0].titulo, "Ramos")
 
-    #TODO: Rever o teste abaixo
-    '''def test_listar_categorias_invalido(self):
+    def test_listar_categorias(self):
         self.gestor.criar_categoria("Ramos")
         self.gestor.criar_categoria("Vasos")
         self.gestor.criar_categoria("Arranjos Ornamentais")
-        self.gestor.eliminar_categoria(1)
-        self.assertEqual(len(self.gestor.categorias), 2)
+        self.gestor.listar_categorias()
+        self.assertEqual(len(self.gestor.categorias), 3)
         self.assertEqual(self.gestor.categorias[0].titulo, "Ramos")
-        self.assertEqual(self.gestor.categorias[1].titulo, "Arranjos Ornamentais")'''
+        self.assertEqual(self.gestor.categorias[1].titulo, "Vasos")
+        self.assertEqual(self.gestor.categorias[2].titulo, "Arranjos Ornamentais")
 
-    def test_eliminar_categoria_invalido(self):
+    def test_eliminar_categoria(self):
+        self.gestor.criar_categoria("Ramos")
+        self.gestor.eliminar_categoria(0)
+        self.assertEqual(len(self.gestor.categorias), 0)
+
+    def test_criar_categoria_duplicada(self):
+        self.gestor.criar_categoria("Ramos")
+        self.gestor.criar_categoria("Ramos")
+        self.assertEqual(len(self.gestor.categorias), 1)
+
+    def test_eliminar_categoria_invalida(self):
         self.gestor.criar_categoria("Ramos")
         self.gestor.eliminar_categoria(1)
         self.assertEqual(len(self.gestor.categorias), 1)
